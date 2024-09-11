@@ -45,7 +45,7 @@ Once your VPS is set up, it's time to unlock the full potential of SSH. SSH isn'
 
 ## Tunneling BurpSuite Over SSH
 
-To route web traffic through Burp Suite and over SSH, you can use SSH’s dynamic port forwarding feature. This sets up a SOCKS proxy on your local machine, allowing you to forward traffic securely through the VPS.
+To route web traffic through Burp Suite and over SSH, you can use SSH’s dynamic port forwarding feature. This sets up a SOCKS proxy on your local machine, allowing you to forward traffic securely through the VPS. Use Dynamic SOCKS Proxy `-D` when you need to route various types of traffic (web browsing, email, etc.) through a single SSH connection, similar to how a VPN would work. The SOCKS proxy allows you to specify multiple destinations (dynamic routing).
 
 ### Step 1. Establish an SSH connection 
 
@@ -55,6 +55,7 @@ The first step is to establish an SSH connection to your VPS with dynamic port f
 ssh -D 10801 kali@Y<VPS_IP>
 ```
 `-D 10801`: This sets up a dynamic SOCKS proxy on port 10801 on your local machine. 
+
 
 ### Step 2. Configure Firefox 
 Next configure Firefox to route its HTTP traffic through the proxy.
@@ -105,11 +106,11 @@ graph LR;
 ```
 
 
-
-
 ## Mounting Directories and Sharing Files over SSH
 
-When working in a remote environment, you may need to transfer files between your local Kali machine and your Kali VPS. To do this efficiently, I recommend using **SSHFS** (SSH File System). SSHFS allows you to mount and interact with directories on a remote server over an SSH connection, providing an easy way to share files.
+In remote environments, transferring files between your local Kali machine and a remote Kali VPS can be optimized using SSHFS (SSH Filesystem). SSHFS leverages the SSH protocol to securely mount remote directories on your local filesystem, enabling seamless file interaction as if they were part of the local system. 
+
+For scenarios where you need a service (e.g., a web server or database) running on your local machine to be accessible from the remote VPS or other systems in the remote network, use Remote Port Forwarding with the `-R` option. This allows you to forward traffic from a specific port on the remote machine back to a service running on a port on your local machine, enabling remote access to locally hosted services through the SSH tunnel.
 
 
 ### Step 1: Create Shared Directories
@@ -151,8 +152,7 @@ Now, establish an SSH connection from your local Kali machine to your Kali VPS. 
 ssh -D 10801 -R 10000:127.0.0.1:22 kali@<VPS_IP>  # Run this command from on your local Kali machine, which connects you to the VPS and opens socks
 ```
 
-- `-D 10801`: Sets up dynamic port forwarding on port 10801 for web traffic.
-- `-R 10000`:127.0.0.1:22`: Sets up reverse SSH port forwarding, forwarding traffic from port 10000 on the VPS to port 22 on your local machine (SSH service).
+- `-R 10000:127.0.0.1:22`: Sets up reverse SSH port forwarding, forwarding traffic from port 10000 on the VPS to port 22 on your local machine (SSH service).
 
 ### Step 5: Mount the Local Directory on the VPS
 
@@ -168,32 +168,23 @@ With this setup, you can now share files between your local machine and VPS, whi
 
 ## Tunneling Remote Desktop Protocol (RDP) Over SSH
 
-```mermaid
-graph LR
-    KaliLocal[Kali Local Machine] -- "SSH Tunnel: Local Port 8888" --> VPS[VPS]
-    VPS -- "Forward to 192.168.20.10:3389 over VPN" --> OffSecLab[OffSec Lab RDP Service]
-
-```
-
-For tunneling RDP traffic, use SSH local port forwarding. Suppose the target machine's IP is `192.168.20.10` and is running RDP on port 3389, use the following command:
+To tunnel RDP traffic over to the VPS and to OffSec Labs, use **SSH Local Port Forwarding**. For example, if the target machine's IP is `192.168.20.10` and it is running RDP on port `3389`, the following command can be used to forward traffic from your local machine:
 
 ```bash
 ssh -L 0.0.0.0:8888:192.168.20.10:3389 kali@<VPS_IP>  # Forward RDP session over SSH. Update 192.168.20.10 to your target machine and RDP port number of the box your connecting to as needed. Execute command on local machine.
 ```
 
-This command establishes a secure SSH tunnel between your local machine and the VPS, allowing traffic to be forwarded to 192.168.20.10:3389 on OffSec’s network over the VPN. By connecting to localhost:8888 on your Kali machine, your connection is tunneled through the VPS to reach OffSec’s network. **Do not forget to replace `192.168.20.10` to the IP address of your target machine that your attempting to connect to.**
+This command forwards traffic from port 8888 on your local machine to port 3389 on the remote VPS, allowing you to connect to the remote RDP service as though it were running locally. 
 
-On your local machine, you can use the Rdesktop client:
+**Local Port Forwarding** `-L` is ideal when you want to access a service (e.g., a database, web server, or RDP session) running on a remote machine, but interact with it as if it were running on your local machine. This provides a secure tunnel for accessing remote services through an SSH connection. A useful way to remember this is to think, "I want to interact with that service locally."
+
+Now from your local machine, you can use the rdesktop or xfreerdp to access the machine:
 
 ```bash
 rdesktop -g 80% -u <username> -p <password> -z -P -x 1 127.0.0.1:8888  # Connect to RDP session using rdesktop. Execute command on Kali local.
-```
-
-Alternatively, you can use **xfreerdp**:
-
-```bash
 xfreerdp /u:"Username" /v:127.0.0.1:8888 # Alternatively, connect using xfreerdp. Execute command on Kali local.
 ``` 
+
 
 ---
 
@@ -212,55 +203,6 @@ Note: By default, the Tmux prefix is CTRL + b. To detach from a session (while i
 
 For a deeper dive into Tmux, I highly recommend checking out IppSec’s video tutorial on Tmux [here](https://www.youtube.com/watch?v=Lqehvpe_djs).
 
----
-# Most Useful Tools for the OSCP Exam
-
-During my OSCP journey, I relied heavily on a few specific tools that saved time and made the process more efficient. Below are the most useful tools and resources I used for the OSCP exam:
-
-### [Autorecon](https://github.com/Tib3rius/AutoRecon)
-
-Autorecon automates the enumeration process by scanning open ports and using tools like Nmap, Nikto, and Gobuster. **It saves valuable time** during the exam.
-
-### [Greenshot](https://getgreenshot.org/)
-
-Greenshot is a fast and lightweight screenshot tool. It allows you to annotate and organize screenshots, making it perfect for OSCP note-taking.
-
-### [ligolo-ng](https://github.com/nicocha30/ligolo-ng)
-
-Ligolo-ng is a simple, lightweight and fast tool that allows pentesters to establish tunnels from a reverse TCP/TLS connection using a tun interface (without the need of SOCKS).
-
-### [ssf - Secure Socket Funneling](https://github.com/securesocketfunneling/ssf)
-
-Similar to Ligolo-ng, **Secure Socket Funneling** is a cross-platform network tool that forwards data from multiple TCP or UDP sockets through a single secure TLS tunnel to a remote computer. It is available as a standalone executable for Windows, Linux, and macOS, making it a simple and efficient solution for secure data forwarding. I used SSF during my OSCP Labs to pivot into the IT department's subnet.
-
-
----
-
-# Notes and Reporting
-
-For note-taking during the exam, I highly recommend using **Joplin** or **Obsidian**. Both tools support Markdown formatting and work well with screenshots, especially when used with Greenshot. 
-
-**Avoid CherryTree** Some people recommend CherryTree, but I had a bad experience with it. I lost all my notes when pasting in my proof-of-concept (PoC). Stick with more reliable options like Joplin or Obsidian.
-
-**TJNull’s OSCP Reporting Template**: TJNull offers a great OSCP report template, which you can use for both your lab and exam reports. It’s highly recommended for creating structured and clear documentation of your exam process [TJNull’s template](https://github.com/tjnull/TJ-JPT).
-
----
-
-# Tips for Passing the OSCP
-
-Here are a few key tips that I can share which really helped me pass the OSCP exam:
-
-### 1. Do the Course Exercises
-
-While it may take more time, completing the course exercises is essential. They help you identify your strengths and weaknesses and offer valuable learning opportunities that will help you on the exam.
-
-### 2. Take Screenshots and Detailed Notes
-
-During the exam, document everything as you go. Take screenshots of vulnerabilities and commands, and keep detailed notes. This will not only save time when writing your final report but will also help you remember how you exploited each target.
-
-### 3. Start with the 25-Point Machines
-
-Don’t be intimidated by the 25-point machines. I started my exam by tackling the two 25-point machines while I was still fresh and focused. This allowed me to score higher points early on and build confidence for the rest of the exam.
 
 ---
 
@@ -268,68 +210,18 @@ Don’t be intimidated by the 25-point machines. I started my exam by tackling t
 
 Here are some additional resources that I found incredibly helpful during my OSCP preparation:
 
-If your new to Buffer Overflow this is hands down the best learning material you could find **Buffer Overflow Made Easy** by The Cyber Mentor [here](https://www.youtube.com/watch?v=qSnPayW6F7U&list=PLLKT__MCUeix3O0DPbmuaRuR_4Hxo4m3G).
 
 - [Buffer Overflow Made Easy by The Cyber Mentorhere](https://www.youtube.com/watch?v=qSnPayW6F7U&list=PLLKT__MCUeix3O0DPbmuaRuR_4Hxo4m3G) This is hands down the best resource for learning buffer overflow attacks.
 - [HackTricks Book](https://book.hacktricks.xyz/) A great reference book for various pentesting techniques and knowledge.
 - [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) This GitHub repo is an excellent resource for different payloads and techniques.
 - [Ippsec](https://ippsec.rocks/) IppSec’s walkthroughs are invaluable for learning various techniques and methodologies.
-
-Courses on privilege escalation by Tib3rius:
-- [Windows Privilege Escalation](https://www.udemy.com/course/windows-privilege-escalation/)
-- [Linux Privilege Escalation](https://www.udemy.com/course/linux-privilege-escalation/)
-
----
-## Cheat Sheet
-
-To put everything together, here’s a cheat sheet for easy reference during your OSCP exam preparation:
-
-```bash
-# 1.
-## Web over SSH - Dynamic Socks proxy for HTTP Traffic
-ssh -D 10801 kali@<VPS_IP>  # Establish a dynamic SOCKS proxy. Replace <VPS_IP> with your VPS's IP address. Execute command on Kali local.
-
-# 2.
-## Web and SSHFS over SSH 
-ssh -D 10801 -R 10000:127.0.0.1:22 kali@<VPS_IP>  # Establish SSH connection with dynamic port forwarding and reverse SSH for file sharing. Execute command on Kali local.
-## . Mount Local Directory to VPS 
-sshfs -p 10000 kali@127.0.0.1:/home/kali/Local_Share /home/kali/VPS_Share/   # Mount local directory to VPS. Run on VPS.
-
-# 3.
-## RDP over SSH
-ssh -L 0.0.0.0:8888:192.168.20.10:3389 kali@<VPS_IP>  # Forward RDP session over SSH. Update 192.168.20.10 to your target machine and RDP port number of the box your connecting to as needed. Execute command on local machine.
-rdesktop -g 80% -u <UserName> -p <Password> -z -P -x 1 127.0.0.1:8888   # Connect to RDP session using rdesktop. Execute command on Kali local.
-xfreerdp /u:"Username" /v:127.0.0.1:8888  # Alternatively, connect using xfreerdp. Execute command on Kali local.
-```
-
-### Configure Firefox
-Setup Firefox to route all web traffic through the SOCKS proxy created by SSH.
-
-1. Open **Firefox**.
-2. In the address bar, enter `about:preferences`.
-3. Scroll down to **Network Settings** and click on **Settings…**.
-4. Choose **Manual proxy configuration**.
-5. Set **SOCKS Host** to `127.0.0.1` and **Port** to `10801`.
-6. Select **SOCKS v5**.
-7. Check **Proxy DNS when using SOCKS v5**.
-8. Click **OK** to save the settings.
-
-### Configure Burp Suite
-Setup Burp Suite to intercept and modify HTTP/S traffic routed through the SOCKS proxy.
-
-1. Open **Burp Suite**.
-2. Navigate to **User options** > **Connections**.
-3. Scroll down to **SOCKS Proxy**.
-4. Enable **Use a SOCKS proxy**.
-5. Set **SOCKS proxy host** to `127.0.0.1`.
-6. Set **SOCKS proxy port** to `10801`.
-7. Check **Do DNS lookups over SOCKS5 proxy**.
-8. Confirm and restart Burp Suite if necessary to apply changes.
+- [Windows Privilege Escalation](https://www.udemy.com/course/windows-privilege-escalation/) Windows privilege escalation by Tib3rius.
+- [Linux Privilege Escalation](https://www.udemy.com/course/linux-privilege-escalation/) Linux privilege escalation by Tib3rius.
 
 ---
 
 # Conclusion
-Overcoming connectivity issues during the OSCP journey can be a major challenge, but with the right tools and setup, it's entirely possible to maintain a stable connection to OffSec labs. By utilizing a VPS as a jump server and leveraging SSH tunneling, you can bypass ISP throttling or restrictive firewalls, such as the Great Firewall of China, allowing you to focus on what truly matters—developing your skills and passing the OSCP exam.
+Overcoming connectivity issues during the OSCP journey can be a major challenge, but with the right tools and setup, it's possible to maintain a stable connection to OffSec labs. By utilizing a VPS as a jump server and leveraging SSH tunneling, you can bypass ISP throttling or restrictive firewalls, allowing you to focus on what truly matters—developing your skills and passing the OSCP exam.
 
 The steps and techniques outlined in this guide are not only relevant for OSCP but can also be adapted for other penetration testing environments. I hope this post proves helpful.
 
