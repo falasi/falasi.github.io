@@ -1,6 +1,6 @@
 ---
 title: My OSCP Journey From The Cloud
-date: 2024-09-08 08:20:00 +/-TTTT
+date: 2020-09-08 08:20:00 +/-TTTT
 categories: [network,tunnel]
 tags: [network,tunnel,ssh,socks,proxy]     # TAG names should always be lowercase
 description: A detailed guide on overcoming connectivity issues during my OSCP journey by using a VPS jump server and secure SSH tunneling to access OffSec’s labs.
@@ -325,6 +325,8 @@ Setup Burp Suite to intercept and modify HTTP/S traffic routed through the SOCKS
 6. Set **SOCKS proxy port** to `10801`.
 7. Check **Do DNS lookups over SOCKS5 proxy**.
 8. Confirm and restart Burp Suite if necessary to apply changes.
+
+---
 
 # Conclusion
 Overcoming connectivity issues during the OSCP journey can be a major challenge, but with the right tools and setup, it's entirely possible to maintain a stable connection to OffSec labs. By utilizing a VPS as a jump server and leveraging SSH tunneling, you can bypass ISP throttling or restrictive firewalls, such as the Great Firewall of China, allowing you to focus on what truly matters—developing your skills and passing the OSCP exam.
