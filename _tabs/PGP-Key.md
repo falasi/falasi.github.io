@@ -13,7 +13,7 @@ If you’d like to send me an encrypted email to ensure privacy, you can use my 
 3. **Send an Encrypted Email**: Use the key in your PGP-compatible email client or webmail service, such as [Proton Mail](https://pr.tn/ref/CFYWMGZJEF90) to encrypt your message. 
 
 
-**PGP Key Fingerprint:**:  `87dc9c01f9d44c6efdece1276876e30acb84551d`
+**PGP Key Fingerprint:**  `87dc9c01f9d44c6efdece1276876e30acb84551d`
 
 
 

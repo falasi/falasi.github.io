@@ -41,5 +41,5 @@ When I'm not testing security environments, I love exploring **game hacking** as
 
 ## Let’s Connect!
 
-Thanks for stopping by! I hope you find the information on this blog helpful. Feel free to reach out if you have any questions, want to collaborate, or just want to chat about cybersecurity and tech. You can connect with me on [Mastodon](https://infosec.exchange/@falasi) or drop me a message via the email contact@falasi.net.
+Thanks for stopping by! I hope you find the information on this blog helpful. Feel free to reach out if you have any questions, want to collaborate, or just want to chat about cybersecurity and tech. You can connect with me on [Mastodon](https://infosec.exchange/@falasi) or drop me a message via the email saeed@falasi.net.
 
