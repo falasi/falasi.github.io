@@ -1,5 +1,5 @@
 ---
-title: How to Automate SOAP XML Signatures Using Mitmproxy
+title: How to Automate SOAP XML Signatures Using BurpSuite and Mitmproxy
 date: 2024-09-27 08:20:00 +/-TTTT
 categories: [web,proxy]
 tags: [web,proxy,burp,mitmproxy]     
