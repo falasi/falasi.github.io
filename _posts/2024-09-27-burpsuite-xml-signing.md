@@ -81,7 +81,7 @@ _Burp Suite "Connections" with upstream proxy set to 127.0.0.1:8088 for all traf
 
 ### XML Template
 
-For `mitmproxy` to sign the XML correctly, we need a placeholder in the XML for the signature. Here's an example of an XML template with the necessary placeholders:
+For our mitmproxy script to sign the XML body correctly, I tailored the script to parse and look for the Body element with an Id attribute—that is, `<Body Id="">`——as this was the requirement based on the SOAP API I was testing. Depending on how your client's SOAP API is structured, you will need to tailor the script accordingly.
 
 ```xml
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
