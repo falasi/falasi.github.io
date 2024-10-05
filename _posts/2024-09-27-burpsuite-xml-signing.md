@@ -1,5 +1,5 @@
 ---
-title: Overcoming Burp Suite Limitations: Using mitmproxy to Sign SOAP Requests
+title: Overcoming Burp Suite Limitations Using mitmproxy to Sign SOAP Requests
 date: 2024-09-27 08:20:00 +/-TTTT
 categories: [web,proxy]
 tags: [web,proxy,burp,mitmproxy]     
@@ -305,7 +305,8 @@ curl --location \
 ```
 
 ![img-description](/assets/img/posts/3/3.png){: .light }
-_mitmproxy in action signing xml requests._
+![img-description](/assets/img/posts/3/3.png){: .dark }
+_mitmproxy script in action signing xml requests._
 
 ### Limitations and Considerations
 
