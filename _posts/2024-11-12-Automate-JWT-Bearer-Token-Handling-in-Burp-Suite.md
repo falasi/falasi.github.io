@@ -61,9 +61,8 @@ We'll configure Burp Suite to automatically:
      - Leave the default selections for "Update current request with parameters" and "Update current request with cookies" checked.
 
    - Check the "If session is invalid, perform the action below" option and select **Run a macro**. Choose the macro you created, which will extract the token.
-   - At the bottom, check the box "After running the macro, invoke a Burp extension action handler:" and select **Add Custom Header**, the extension we installed.
-
-   - We should now have our rule action added. At the top of the window, select **Scope**.
+   - At the bottom, check the box "After running the macro, invoke a Burp extension action handler:" and select **Add Custom Header**, the extension we installed, we should now have our rule action added.
+   - At the top of the window, select **Scope**.
      - The important thing here is to use Suite scope (defined by the target tab) so that this runs against only in-scope items. But if it's your first time configuring this, you can leave it to include all URLs; just know that it will run this macro against all URLs if you choose that option.
    - Click **OK** to save and exit the session handling rule settings.
 
